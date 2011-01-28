@@ -1,0 +1,8 @@
+
+    [deluge.plugin.core]
+    BatchRenamer = batchrenamer:CorePlugin
+    [deluge.plugin.gtkui]
+    BatchRenamer = batchrenamer:GtkUIPlugin
+    [deluge.plugin.web]
+    BatchRenamer = batchrenamer:WebUIPlugin
+    

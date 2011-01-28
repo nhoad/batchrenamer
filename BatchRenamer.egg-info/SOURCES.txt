@@ -1,0 +1,11 @@
+setup.py
+BatchRenamer.egg-info/PKG-INFO
+BatchRenamer.egg-info/SOURCES.txt
+BatchRenamer.egg-info/dependency_links.txt
+BatchRenamer.egg-info/entry_points.txt
+BatchRenamer.egg-info/top_level.txt
+batchrenamer/__init__.py
+batchrenamer/common.py
+batchrenamer/core.py
+batchrenamer/gtkui.py
+batchrenamer/webui.py

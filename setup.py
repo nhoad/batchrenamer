@@ -43,7 +43,7 @@ from setuptools import setup
 __plugin_name__ = "BatchRenamer"
 __author__ = "Nathan Hoad"
 __author_email__ = "nathan@getoffmalawn.com"
-__version__ = "0.1"
+__version__ = "0.2"
 __url__ = ""
 __license__ = "GPLv3"
 __description__ = ""

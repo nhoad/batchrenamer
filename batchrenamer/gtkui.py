@@ -140,6 +140,10 @@ class RenameFiles():
             child[0] = row[0]
             self.rename(child)
 
+    def fix_episode(self, matchobj):
+        """Used by the clean function to fix season capitalisation"""
+        return matchobj.group(0).upper()
+
     def clean(self, s):
         """Replace underscores with spaces, capitalise words and remove
         brackets and anything inbetween them.
@@ -171,28 +175,40 @@ class RenameFiles():
 
         s += ' %s%s' % (words[-1], extension)
 
-        #s += ' %s%s' % (words[-1], extension)
+        # this fixes the problem with the E before episode numbers being lowercase.
+        s = re.sub('S\d+(e)\d+', self.fix_episode, s)
 
         return s
 
     def parse_season_episode(self, s):
         """Try and parse the season and episode numbers from the filename.
 
-        Searches for both the SxxExx and SEE season/episode structures."""
+        Searches for the SxxExx, SEE and SxEE season/episode structures."""
         season = None
         episode = None
 
-        results = re.search('S(\d+)E(\d+)', s)
-        if results:
-            s = re.sub('S(\d+)E(\d+)', '^s^e', s)
-        else:
-            results = re.search('(\d)(\d\d)', s)
-            if results:
-                s = re.sub('\d\d\d', '^s^e', s)
+        results = re.search(r'S(\d+)E(\d+)', s)
 
         if results:
+            s = re.sub('S(\d+)E(\d+)', '^s^e', s)
             season = int(results.groups()[0])
             episode = int(results.groups()[1])
+            return (season, episode, s)
+
+        results = re.search(' (\d)(\d\d) ', s)
+        if results:
+            s = re.sub(' \d\d\d ', '^s^e', s)
+            season = int(results.groups()[0])
+            episode = int(results.groups()[1])
+            return (season, episode, s)
+
+        results = re.search('(\d)[Xx](\d\d)', s)
+        if results:
+            s = re.sub('\d[Xx]\d\d', '^s^e', s)
+            season = int(results.groups()[0])
+            episode = int(results.groups()[1])
+
+            return (season, episode, s)
 
         return (season, episode, s)
 
@@ -207,11 +223,15 @@ class RenameFiles():
 
         extension = os.path.splitext(s)[1]
 
+        pattern = re.compile(r'(\d+)')
         for w in words:
-            r = re.search(r'(\d+)', w)
+            r = pattern.search(w)
 
             if r:
                 episode = r.groups()[0]
+                # filenames with years in them!
+                if len(episode) > 2:
+                    continue
                 i = words.index(w)
                 s = ' '.join(words[:i] + ['^s^e'] + words[i + 1:])
 
@@ -278,7 +298,7 @@ class RenameFiles():
         for p, index in files:
             if os.path.basename(p) == p:
                 structure[0].append(p)
-                tree_store.append(None, [False, index, p, ''])
+                self.tree_store.append(None, [False, index, p, ''])
 
             else:
                 parts = p.split('/')

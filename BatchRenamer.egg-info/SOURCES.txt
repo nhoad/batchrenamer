@@ -8,4 +8,5 @@ batchrenamer/__init__.py
 batchrenamer/common.py
 batchrenamer/core.py
 batchrenamer/gtkui.py
+batchrenamer/test.py
 batchrenamer/webui.py
